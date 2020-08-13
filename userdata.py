@@ -2,28 +2,22 @@
 import requests
 from pprint import pprint
 
-print("Hi, welcome to Github userinfo scraper!")
 #loop
 def loop():
     while True:
         username = input('What is the username?: ')
         url = f"https://api.github.com/users/{username}"
-        user_data = requests.get(url).json()
-        if len (username) < 3:
-            print ('Username must be at least 3 characters')
-            pass
-        if len (username) > 3:
-            pprint (user_data)
-        question()
-
-#continue
-def question():
-    import sys
-    while True:
-        again = input('Do you want to continue? yes/no: ')
-        if again == 'yes':
-            return loop()
-        elif again == 'no':
-            print("Bye!")
-            sys.exit()
+        response = requests.get(url)
+        status_code = response.status_code
+        if status_code == 200:
+            user_data = response.json()
+            pprint(user_data)
+            #question
+            again = input('Do you want to continue? yes/no: ')
+            if again == 'yes':
+                continue
+            elif again == 'no':
+                break
+        elif status_code >= 400:
+            print('Try again')
 loop()
